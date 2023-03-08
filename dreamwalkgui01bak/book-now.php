@@ -120,6 +120,7 @@
 		
 		<div id="content">
 		
+        
         <?php
   // define variables and set to empty values
   $FirstNameErr = $LastNameErr = $EmailErr = $ContactNumberErr = "";
@@ -129,7 +130,7 @@
     if (empty($_POST["FirstName"])) {
       $FirstNameErr = "First Name is required";
     } else {
-      $name = test_input($_POST["FirstName"]);
+      $name = filter_input($_POST["FirstName"]);
       // check if name only contains letters and whitespace
       if (!preg_match("/^[a-zA-Z-' ]*$/",$FirstName)) {
         $FirstNameErr = "Only letters and white space allowed";
@@ -139,7 +140,7 @@
     if (empty($_POST["LastName"])) {
         $LastNameErr = "Last Name is required";
       } else {
-        $LastName = test_input($_POST["LastName"]);
+        $LastName = filter_input($_POST["LastName"]);
         // check if name only contains letters and whitespace
         if (!preg_match("/^[a-zA-Z-' ]*$/",$LastName)) {
           $LastNameErr = "Only letters and white space allowed";
@@ -149,7 +150,7 @@
     if (empty($_POST["Email"])) {
       $EmailErr = "Email is required";
     } else {
-      $Email = test_input($_POST["Email"]);
+      $Email = filter_input($_POST["Email"]);
       // check if e-mail address is well-formed
       if (!filter_var($Email, FILTER_VALIDATE_EMAIL)) {
         $EmailErr = "Invalid email format";
@@ -159,7 +160,7 @@
     if (empty($_POST["ContactNumber"])) {
       $ContactNumberErr = "Contact Number is required";
     } else { 
-      $ContactNumber = test_input($_POST["ContactNumber"]);
+      $ContactNumber = filter_input($_POST["ContactNumber"]);
       if(!preg_match('/^[0-9]{10}+$/', $phone)) {
         $ContactNumberErr = "Invalid contact number";
       }
@@ -174,7 +175,7 @@
   }
 ?>
 
-		<!-- /// CONTENT  /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+                		<!-- /// CONTENT  ///////////////////////////////// -->
 	
             <div class="container">
                 <div class="row">
@@ -185,30 +186,29 @@
                         <div id="respond" class="comment-respond">
                         
                                 
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
+                        <form method="POST" action="book.php">  
                     
                             <h1>Book now</h1>
                             <h6></h6>
 
-                    
 
                             <!----seat html -->
                         
-                        
-                        <label for="name">First Name</label>
-                        <input type="text" id="name" name="FirstName" value="<?php echo $FirstName;?>" placeholder="CheyLyn" pattern=[A-Z\sa-z]{3,20} required>
-                                    
-                        
-                        <label for="name">Last Name</label>
-                        <input type="text" id="name" name="LastName" value="<?php echo $LastName;?>" placeholder="Alinevdez" pattern=[A-Z\sa-z]{3,20} required>
+                            <label for="name">First Name</label>
+                            <input type="text" id="name" name="FirstName" placeholder="CheyLyn" value="<?php set_value('firstName') ?>" pattern=[A-Z\sa-z]{3,20} required>
+                                       
+                            
+                            <label for="name">Last Name</label>
+                            <input type="text" id="name" name="LastName"  placeholder="Alinevdez" value="<?php set_value('lastName') ?>" pattern=[A-Z\sa-z]{3,20} required>
 
-                        <div class="elem-group">
-                        <label for="email"> E-mail</label>
-                        <input type="text" id="email" name="Email" value="<?php echo $Email;?>" placeholder="Cheveri_Joy@email.com" required>
-                                    
-                        <div class="elem-group">
-                        <label for="phone"> Contact Number</label>
-                        <input type="text" id="phone" name="ContactNumber" value="<?php echo $ContactNumber;?>" placeholder="09XXXXXXXXX">
+                            <div class="elem-group">
+                            <label for="email"> E-mail</label>
+                            <input type="text" id="email" name="Email"  placeholder="Cheveri_Joy@email.com" value="<?php set_value('email') ?>" required>
+                                        
+                            <div class="elem-group">
+                            <label for="phone"> Contact Number</label>
+                            <input type="text" id="phone" name="ContactNumber"  placeholder="09XXXXXXXXX" value="<?php set_value('contactnumber') ?>">
+
                         <!----
                             <div class="elem-group inlined">
                             <label for="child">Children</label>
@@ -232,43 +232,73 @@
                                 <option value="tuguegarao">Tuguegarao</option>
                             </select>
                             </div> -->
+
                             <hr>
                             <p class="form-submit">
                             <input class="elem-group" name="submit" type="submit" id="submit" value="Send">
                             </p>
                             </form> 
-     
+
+
 <?php
+$FirstName = filter_input(INPUT_POST, 'FirstName');
+$LastName = filter_input(INPUT_POST, 'LastName');
+$Email = filter_input(INPUT_POST, 'email');
+$ContactNumber = filter_input(INPUT_POST, 'ContactNumber');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") 
-{
+if (!empty($FirstName)){
+  if (!empty($LastName)){
+    if(!empty($Email)){
+      if(!empty($ContactNumber)){
 
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "dreamwalk_db";
-	
-	// Create connection
-	$conn = new mysqli($servername, $username, $password, $dbname);
-	// Check connection
-	if ($conn->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
-	}
-	
-	$sql = "INSERT INTO booking (FirstName, LastName, Email, ContactNumber)
-	VALUES ('$FirstName', '$LastName' '$Email', '$ContactNumber')";
-	
-  if ($conn->query($sql) === TRUE) {
-    echo '<script>alert("New record created successfully")</script>';
-    } else {
-    echo '<script>alert("Error creating a new record")</script>'. $sql . "<br>" . $conn->error;
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "dreamwalk_db";
+    
+            // Create connection
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+        if (mysqli_connect_error()){
+          die('Connect Error ('. mysqli_connect_errno() .') '
+          . mysqli_connect_error());
+          }
+          else{
+          $sql = "INSERT INTO booking (firstName,lastName, email, contactnumber)
+          values ('$FirstName','$LastName','$Email','$ContactNumber')";
+          if ($conn->query($sql)){
+          echo "New record is inserted sucessfully";
+          }
+          else{
+          echo "Error: ". $sql ."
+          ". $conn->error;
+          }
+          $conn->close();
+          }
+      }
+      else{
+        echo "Messages should not be empty";
+        die();
+      }
     }
-	
-	$conn->close();
+    else{
+      echo "Service should not be empty";
+      die();
+    }
+  }
+  else{
+    echo "LastName should not be empty";
+    die();
+  }
+}
+else{
+  echo "FirstName should not be empty";
+  die();
 }
 ?>
 
-                        </div><!-- end .headline -->
+
+                    </div><!-- end .headline -->
                                                 
                     </div><!-- end .span12 -->
                  </div><!-- end .row -->

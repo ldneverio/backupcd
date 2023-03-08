@@ -141,14 +141,14 @@
                             <div id="respond" class="comment-respond">
                         
                                 
-                                <form action="#" method="post" id="commentform" class="comment-form fixed" novalidate>
+                                <form action="book-now.php" method="post" id="commentform" class="comment-form fixed" novalidate>
                                     
                                     <!-- Text or HTML to be displayed before the set of comment form fields if the user is not logged in. -->
                                     <p class="comment-notes">Your email address will not be published.</p>
                     
                                     <p class="comment-form-author">
                                         <label for="author">Name <span class="required">*</span></label> 
-                                        <input id="author" name="author" type="text" value="" size="30" aria-required="true" placeholder="enter your name">
+                                        <input id="author" name="fullname" type="text" value="" size="30" aria-required="true" placeholder="enter your name">
                                     </p>
                     
                                     <p class="comment-form-email">
@@ -158,12 +158,12 @@
                     
                                     <p class="comment-form-url">
                                         <label for="url">Website</label> 
-                                        <input id="url" name="url" type="url" value="" size="30" placeholder="enter your contact number">
+                                        <input id="url" name="contact" type="url" value="" size="30" placeholder="enter your contact number">
                                     </p>
                     
                                     <p class="comment-form-comment">
                                         <label for="comment">Comment</label> 
-                                        <textarea id="comment" name="comment" cols="45" rows="5" aria-required="true" placeholder="message"></textarea>
+                                        <textarea id="comment" name="messages" cols="45" rows="5" aria-required="true" placeholder="message"></textarea>
                                     </p>						
                     
                                     <!-- Text or HTML to be displayed after the set of comment fields (and before the submit button) -->
@@ -355,3 +355,5 @@
     
     </body>
 </html>
+
+
